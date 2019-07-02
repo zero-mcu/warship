@@ -1,4 +1,4 @@
-#!/bin/bash --login
+#!/bin/bash
 
 project_dir=$(cd "$(dirname "$0")"; 'pwd')
 echo "project_dir=$project_dir"
@@ -49,34 +49,31 @@ elif [ "$#" -ge 1 ]; then
     done
 fi
 
-echo "<<<<<$ZERO_MCU_HOME---$HOME"
-source $HOME/.bashrc
-
-echo ">>>>>$ZERO_MCU_HOME"
 
 sync_zero_path()
 {
     echo "sync zero path ..."
     echo "Check zero sdk path: $ZERO_MCU_HOME"
     if [ -d $ZERO_MCU_HOME/.repo ]; then
-        echo "Enter $ZERO_MCU_HOME"
-        pushd $ZERO_MCU_HOME
-        repo sync
-        popd
-        echo "Exit"
+        if [ $sync_type = "sync" ]; then
+            echo "Enter $ZERO_MCU_HOME"
+            pushd $ZERO_MCU_HOME
+            repo sync
+            popd
+            echo "Exit"
+        fi
     else
         echo "No zero sdk found, install..."
-        echo "<<<<$ZERO_MCU_HOME"
-        . ~/.bashrc
-        echo ">><<$ZERO_MCU_HOME"
-        # sh scripts/install.sh $zero_sdk_name --install $zero_workspace
+        . $HOME/.profile
+        sh scripts/install.sh $zero_sdk_name --install $zero_workspace
     fi
 }
 
+source $HOME/.profile
 sync_zero_path
-
+source $HOME/.profile
 source $ZERO_MCU_HOME/scripts/env.sh
-echo "<<<$ZERO_3RD_PATH"
+
 build_project()
 {
     echo "build project"

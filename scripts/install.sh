@@ -3,8 +3,9 @@
 INSTALL_PATH=~/Development/workspace
 ZERO_SDK_NAME=zero-mcu
 
-BACKUP_PATH=~/bakcup
-BASHRC_PATH=~/
+BACKUP_PATH=$HOME/bakcup
+PROFILE_PATH=$HOME
+PROFILE_NAME=.profile
 
 sync_type="none"
 
@@ -52,7 +53,7 @@ done
 
 ZERO_MCU_HOME=$INSTALL_PATH/$ZERO_SDK_NAME
 
-echo "install zero-mcu to $INSTALL"
+echo "install zero-mcu to $INSTALL_PATH"
 echo "version: $VERSION"
 
 SyncRepo()
@@ -76,29 +77,29 @@ SyncRepo()
 
 GenerateEnv()
 {
-    if [ -f $BACKUP_PATH/.bashrc ]; then
+    if [ -f $BACKUP_PATH/$PROFILE_NAME ]; then
         echo "Environment variable has already been generated, Please check /etc/profile.bak\
-        or $BACKUP_PATH/.bashrc.bak, maybe has exist!"
+        or $BACKUP_PATH/$PROFILE_NAME.bak, maybe has exist!"
         exit 1
     else
         if [ ! -d $BACKUP_PATH ]; then
             mkdir -p $BACKUP_PATH
         fi
-        cp $BASHRC_PATH/.bashrc $BACKUP_PATH/ >/dev/null 2>&1
-        mv $BASHRC_PATH/.bashrc $BASHRC_PATH/.bashrc.bak > /dev/null 2>&1
+        cp $PROFILE_PATH/$PROFILE_NAME $BACKUP_PATH/ >/dev/null 2>&1
+        mv $PROFILE_PATH/$PROFILE_NAME $PROFILE_PATH/$PROFILE_NAME.bak > /dev/null 2>&1
 
-        sed -i 's/export ZERO_MCU_HOME=.*//g' $BACKUP_PATH/.bashrc
+        sed -i 's/export ZERO_MCU_HOME=.*//g' $BACKUP_PATH/$PROFILE_NAME
         # remove last '\n'
-        line=`sed -n '$=' $BACKUP_PATH/.bashrc`
+        line=`sed -n '$=' $BACKUP_PATH/$PROFILE_NAME`
         line=`expr $line - 1`
-        sed -i $line'{N;s/^\n//}' $BACKUP_PATH/.bashrc
-        line=`sed -n '$=' $BACKUP_PATH/.bashrc`
+        sed -i $line'{N;s/^\n//}' $BACKUP_PATH/$PROFILE_NAME
+        line=`sed -n '$=' $BACKUP_PATH/$PROFILE_NAME`
         line=`expr $line - 1`
-        sed -i $line'{N;s/^\n//}' $BACKUP_PATH/.bashrc
+        sed -i $line'{N;s/^\n//}' $BACKUP_PATH/$PROFILE_NAME
 
-        echo >>$BACKUP_PATH/.bashrc
-        echo "export ZERO_MCU_HOME=$ZERO_MCU_HOME" >> $BACKUP_PATH/.bashrc
-        mv $BACKUP_PATH/.bashrc $BASHRC_PATH/
+        echo >>$BACKUP_PATH/$PROFILE_NAME
+        echo "export ZERO_MCU_HOME=$ZERO_MCU_HOME" >> $BACKUP_PATH/$PROFILE_NAME
+        mv $BACKUP_PATH/$PROFILE_NAME $PROFILE_PATH/
     fi
 }
 
