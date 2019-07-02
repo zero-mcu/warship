@@ -58,6 +58,7 @@ sync_zero_path()
         if [ $sync_type = "sync" ]; then
             echo "Enter $ZERO_MCU_HOME"
             pushd $ZERO_MCU_HOME
+            echo ">>>>>$(pwd)"
             repo sync
             popd
             echo "Exit"
@@ -73,12 +74,11 @@ sync_zero_path()
         if [ ! -d $zero_workspace/manifest ]; then
             echo "No manifest found, clone from https://github.com/zero-mcu/manifest.git"
             git clone https://github.com/zero-mcu/manifest.git
-        else
-            echo "Enter $zero_workspace/manifest"
-            cd $zero_workspace/manifest
-            git pull
-            sh install.sh $zero_sdk_name --install $zero_workspace
         fi
+        echo "Enter $zero_workspace/manifest"
+        cd $zero_workspace/manifest
+        git pull
+        sh install.sh $zero_sdk_name --install $zero_workspace
     fi
 }
 
