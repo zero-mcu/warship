@@ -65,7 +65,20 @@ sync_zero_path()
     else
         echo "No zero sdk found, install..."
         . $HOME/.profile
-        sh scripts/install.sh $zero_sdk_name --install $zero_workspace
+        if [ ! -d $zero_workspace ]; then
+            mkdir -p $zero_workspace
+        fi
+        echo "Enter $zero_workspace"
+        cd $zero_workspace
+        if [ ! -d $zero_workspace/manifest ]; then
+            echo "No manifest found, clone from https://github.com/zero-mcu/manifest.git"
+            git clone https://github.com/zero-mcu/manifest.git
+        else
+            echo "Enter $zero_workspace/manifest"
+            cd $zero_workspace/manifest
+            git pull
+            sh install.sh $zero_sdk_name --install $zero_workspace
+        fi
     fi
 }
 
